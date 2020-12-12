@@ -7,8 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha -r",
-    "test-all": "mocha -r /tests/**/*.spec.ts",
+    "test": "mocha -r ts-node/register",
+    "test-all": "mocha -r ts-node/register './tests/**/*.spec.ts'",
     "start": "ts-node ./src/server.ts"
   },
   "author": "Emediong Akpan",
