@@ -21,6 +21,7 @@ logger.info('Attempting to connect');
         const connectionString = `mongodb://${db_user}:${db_password}@${db_host}/${db_name}`;
         await mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
         server.listen(port, () => logger.info(`Server running on port:: ${port}...`));
+        server.emit('listening');
     } catch (err) {
         logger.error('Failed to connect to the database', { error_message : err });
         process.exit(1);

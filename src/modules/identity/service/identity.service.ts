@@ -11,6 +11,7 @@ import LoginUserResponse from '../response/login.user.response';
 import RegisterUserResponse from '../response/register.user.response';
 import PasswordHasher from '../utils/password.hasher';
 import { jwtConfig } from '../../../config';
+import ChangePasswordRequest from '../requests/change.password.request';
 
 export default class IdentityService {
 
@@ -60,4 +61,27 @@ export default class IdentityService {
         }
     }
 
+    async changePassword(request: ChangePasswordRequest): Promise<Result<string>> {
+        const { userId, oldPassword, newPassword} = request;
+        try {
+            const user = await User.findById(userId);
+            if (!user){
+                logger.error('No user found with the userId in the token');
+                return { tag: 'failure', error: new ErrorResponse(400, 'Error changing password') };
+            }
+            // Validate the password
+            const isPasswordValid = await PasswordHasher.verifyPassword(oldPassword, user.password);
+            if (!isPasswordValid) {
+                logger.error(IdentityErrorReason.INCORRECT_OLDPASSWORD);
+                return { tag: 'failure', error: new ErrorResponse(400, IdentityErrorReason.INCORRECT_OLDPASSWORD) };
+            }
+            const hashedNewPassword = await PasswordHasher.hashPassword(newPassword);
+            await user.updateOne({ password: hashedNewPassword });
+            logger.info('Successfully changed password');
+            return { tag: 'success', result: '' };
+        } catch(err) {
+            logger.error('An error occured during password change', { error_message: err.message });
+            return { tag: 'failure', error: new ErrorResponse(400, 'Failed to change the password') };
+        }
+    }
 }

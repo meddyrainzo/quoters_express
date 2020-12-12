@@ -8,7 +8,8 @@ enum IdentityErrorReason {
     LONG_LASTNAME = 'The last name is too long. It should contain at most 25 letters',
     INVALID_STRING = 'should only contain characters',
     INVALID_LOGIN = 'Incorrect email or password',
-    REQUIRED = 'is required'
+    REQUIRED = 'is required',
+    INCORRECT_OLDPASSWORD = 'The old password is incorrect'
 }
 
 export default IdentityErrorReason;

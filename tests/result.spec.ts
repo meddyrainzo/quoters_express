@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 
 import ErrorResponse from '../src/Error/error.response';
-import ErrorStatus from '../src/Error/error.status';
 import match, { Failure, Result } from '../src/result';
 
 describe('Testing the result type', () => {
@@ -15,7 +14,7 @@ describe('Testing the result type', () => {
     });
 
     it('should execute the error callback when the result is an error', () => {
-        let errorResponse = new ErrorResponse(ErrorStatus.BAD_REQUEST, "This is an error");
+        let errorResponse = new ErrorResponse(400, "This is an error");
         let result = { tag: 'failure', error: errorResponse } as Failure;
         let finalResult = match(result, 
             _ => "",

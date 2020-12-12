@@ -3,7 +3,6 @@ import { validate } from "class-validator";
 import { NextFunction, Request, RequestHandler, Response } from "express"
 import { logger } from "../config";
 import ErrorResponse from "../Error/error.response";
-import ErrorStatus from "../Error/error.status";
 
 const validationMiddleware = (clazz: any): RequestHandler => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -25,7 +24,7 @@ const validationMiddleware = (clazz: any): RequestHandler => {
 
             let errorReason = errorReasons.join(', ');
                         
-            let errorResponse = new ErrorResponse(ErrorStatus.BAD_REQUEST, errorReason);
+            let errorResponse = new ErrorResponse(400, errorReason);
             logger.error('Validation failed', errorResponse);
             res.status(errorResponse.status).json(errorResponse);
         } 

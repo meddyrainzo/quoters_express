@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "mocha -r ts-node/register",
-    "test-all": "mocha -r ts-node/register './tests/**/*.spec.ts'",
+    "test-all": "mocha -r ts-node/register './tests/**/*.spec.ts'=",
     "start": "ts-node ./src/server.ts"
   },
   "author": "Emediong Akpan",

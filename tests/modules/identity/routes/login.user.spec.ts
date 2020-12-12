@@ -50,6 +50,6 @@ describe('Test logging in a registered user', () => {
         expect(response.body).to.have.property('lastname', "Savage");
         expect(response.body).to.have.property('email', user.email);
         expect(response.body).to.have.property('id');
-        expect(response.body).to.have.property('token');
+        expect(response.body).to.not.have.property('token');
     })
 })
