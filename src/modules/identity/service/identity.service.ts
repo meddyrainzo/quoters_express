@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+
 import { logger } from '../../../config';
 import ErrorResponse from '../../../Error/error.response';
 import { Failure, Result } from '../../../result';
@@ -8,6 +10,7 @@ import RegisterUserRequest from '../requests/register.user.request';
 import LoginUserResponse from '../response/login.user.response';
 import RegisterUserResponse from '../response/register.user.response';
 import PasswordHasher from '../utils/password.hasher';
+import { jwtConfig } from '../../../config';
 
 export default class IdentityService {
 
@@ -48,10 +51,13 @@ export default class IdentityService {
             }
             logger.info('User logged in successfully');
             const { _id, firstname, lastname } = user;
-            return { tag: 'success', result: new LoginUserResponse(_id.toString(), firstname, lastname, email) }
+            const userId = _id.toString();
+            const token = jwt.sign({ sub: userId }, jwtConfig.jwt_secret ?? "Secret", { expiresIn: "1d"});
+            return { tag: 'success', result: new LoginUserResponse(userId, firstname, lastname, email, token) }
         } catch (err) {
             logger.error('An error occured during login', { error_message: err.message });
             return { tag: 'failure', error: new ErrorResponse(400, 'Failed to log in user') };
         }
     }
+
 }

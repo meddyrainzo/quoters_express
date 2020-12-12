@@ -37,7 +37,7 @@ describe('Test logging in a registered user', () => {
         expect(response.status).to.equal(400);
         expect(response.body).to.have.property('errorReason');
         expect(response.body.errorReason).to.contain(IdentityErrorReason.INVALID_EMAIL);
-        expect(response.body.errorReason).to.contain(`Password ${IdentityErrorReason.RE}`);
+        expect(response.body.errorReason).to.contain(`Password ${IdentityErrorReason.REQUIRED}`);
     })
 
     it('should log in a registered user successfully', async() => {
@@ -50,5 +50,6 @@ describe('Test logging in a registered user', () => {
         expect(response.body).to.have.property('lastname', "Savage");
         expect(response.body).to.have.property('email', user.email);
         expect(response.body).to.have.property('id');
+        expect(response.body).to.have.property('token');
     })
 })
