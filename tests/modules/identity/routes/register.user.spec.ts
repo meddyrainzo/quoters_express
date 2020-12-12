@@ -10,9 +10,6 @@ chai.use(chaiHttp);
 const url = '/identity/register';
 const registerUserRequest = new RegisterUserRequest('firstname', 'lastname', 'first@last.com', 'password');
 
-const { firstname, lastname, email, password } = registerUserRequest;
-
-
 describe('Testing user registration', () => {
 
     it('should fail when invalid data is sent in the request', async () => {
@@ -32,10 +29,6 @@ describe('Testing user registration', () => {
         const response = await chai.request(server).post(url).send(registerUserRequest);
 
         expect(response.status).to.equal(201);
-        const b = response.body;
-        expect(response.body).to.have.property('firstname', firstname);
-        expect(response.body).to.have.property('lastname', lastname);
-        expect(response.body).to.have.property('email', email);
         expect(response.body).to.have.property('id');
     })
 })

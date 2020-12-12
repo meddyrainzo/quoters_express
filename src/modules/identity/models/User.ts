@@ -10,6 +10,6 @@ const userSchema = new Schema({
     registered_on: { type: Date, default: new Date().getUTCDate() }
 });
 
-const User: Model<IUser> = model('User', userSchema);
+const User: Model<IUser> = model('users', userSchema);
 
 export default User;

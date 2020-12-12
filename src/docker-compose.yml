@@ -1,18 +1,20 @@
 version: '3.8'
 
 services:
-  q_express:
-    build: .
-    container_name: q_express
+  qexpress:
+    image: 'mongo'
+    container_name: 'qexpress'
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-meddy}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-password}
-      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-q_express}
+      MONGO_INITDB_ROOT_USERNAME: super
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: qexpress
     restart: always
     ports:
       - 27017:27017
     volumes:
-      - q_server:/data/q_server
+      - ./init-db.d/seed.js:/docker-entrypoint-initdb.d/seed.js:ro
+      - qexpress:/data/db
 
 volumes:
-  q_server:
+  qexpress:
+    driver: local

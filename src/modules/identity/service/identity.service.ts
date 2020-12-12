@@ -1,10 +1,13 @@
-import { logger } from "../../../config";
-import ErrorResponse from "../../../Error/error.response";
-import { Result } from "../../../result";
-import User from "../models/User";
-import RegisterUserRequest from "../requests/register.user.request";
-import { RegisterUserResponse } from "../response/register.user.response";
-import PasswordHasher from "../utils/password.hasher";
+import { logger } from '../../../config';
+import ErrorResponse from '../../../Error/error.response';
+import { Failure, Result } from '../../../result';
+import IdentityErrorReason from '../identity.error.reason';
+import User from '../models/User';
+import LoginUserRequest from '../requests/login.user.request';
+import RegisterUserRequest from '../requests/register.user.request';
+import LoginUserResponse from '../response/login.user.response';
+import RegisterUserResponse from '../response/register.user.response';
+import PasswordHasher from '../utils/password.hasher';
 
 export default class IdentityService {
 
@@ -19,10 +22,36 @@ export default class IdentityService {
                 password: hashedPassword
             });
             logger.info(`Successfully registered user ${firstname} ${lastname}`);
-            return { tag: "success", result: new RegisterUserResponse(user._id.toString(), firstname, lastname, email) };
+            return { tag: 'success', result: new RegisterUserResponse(user._id.toString()) };
         } catch(err) {
             logger.error('An error occured when registering the user', { error_message: err.message });
-            return { tag: "failure", error: new ErrorResponse(400, "Failed to register the user") };
+            return { tag: 'failure', error: new ErrorResponse(400, 'Failed to register the user') };
+        }
+    }
+
+    async loginUser(request: LoginUserRequest): Promise<Result<LoginUserResponse>> {
+        const { email, password } = request;
+        const invalidLoginError = { tag: 'failure', error: new ErrorResponse(404, IdentityErrorReason.INVALID_LOGIN) }  as Failure;
+        try {
+            const user = await User.findOne({email: email});
+            if (!user)
+            {
+                logger.error(`User does not exist with email ${email}`);
+                return invalidLoginError;
+            }
+
+            // validate the password
+            const isPasswordValid = await PasswordHasher.verifyPassword(password, user.password);
+            if (!isPasswordValid) {
+                logger.error('The password entered is not valid for the email');
+                return invalidLoginError;
+            }
+            logger.info('User logged in successfully');
+            const { _id, firstname, lastname } = user;
+            return { tag: 'success', result: new LoginUserResponse(_id.toString(), firstname, lastname, email) }
+        } catch (err) {
+            logger.error('An error occured during login', { error_message: err.message });
+            return { tag: 'failure', error: new ErrorResponse(400, 'Failed to log in user') };
         }
     }
 }
