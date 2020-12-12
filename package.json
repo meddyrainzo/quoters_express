@@ -1,0 +1,51 @@
+{
+  "name": "quoters_express",
+  "version": "1.0.0",
+  "description": "Backend application in expressjs and typescript",
+  "main": "server.ts",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha -r",
+    "test-all": "mocha -r /tests/**/*.spec.ts",
+    "start": "ts-node ./src/server.ts"
+  },
+  "author": "Emediong Akpan",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "class-transformer": "^0.3.1",
+    "class-validator": "^0.12.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^4.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.5",
+    "nodemon": "^2.0.6",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/chai": "^4.2.14",
+    "@types/chai-http": "^4.2.0",
+    "@types/cors": "^2.8.8",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.9",
+    "@types/helmet": "^4.0.0",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/mocha": "^8.2.0",
+    "@types/mongoose": "^5.10.2",
+    "@types/node": "^14.14.10",
+    "@types/sinon": "^9.0.9",
+    "@types/winston": "^2.4.4",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "dotenv": "^8.2.0",
+    "mocha": "^8.2.1",
+    "mongodb-memory-server-global": "^6.9.2",
+    "sinon": "^9.2.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.2"
+  }
+}
