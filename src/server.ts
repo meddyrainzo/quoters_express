@@ -3,6 +3,7 @@ import helmet from 'helmet';
 import mongoose from 'mongoose';
 
 import { serverConfig, logger, dbConfig } from './config';
+import identityRouter from './modules/identity/routes/identity.routes';
 
 const server = express();
 const { port } = serverConfig;
@@ -17,13 +18,15 @@ logger.info('Attempting to connect');
 (async () => {
     try {
         const connectionString = `mongodb://${db_user}:${db_password}@${db_host}`;
-        await mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
+        await mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
         server.listen(port, () => logger.info(`Server running on port:: ${port}...`));
     } catch (err) {
         logger.error('Failed to connect to the database', { error_message : err });
         process.exit(1);
     }
 })();
+
+server.use('/identity', identityRouter);
 
 
 export default server;
