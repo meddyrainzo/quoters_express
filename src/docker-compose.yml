@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  q_express:
+    build: .
+    container_name: q_express
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-meddy}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-q_express}
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - q_server:/data/q_server
+
+volumes:
+  q_server:
