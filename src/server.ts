@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 
 import { serverConfig, logger, dbConfig } from './config';
 import identityRouter from './modules/identity/routes/identity.routes';
+import quoteRouter from './modules/quote/routes/quote.routes';
 
 const server = express();
 
@@ -27,6 +28,7 @@ server.use(express.urlencoded({ extended: false }));
 })();
 
 server.use('/identity', identityRouter);
+server.use('/quotes', quoteRouter);
 
 
 export default server;

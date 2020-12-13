@@ -12,7 +12,7 @@ const identityRouter = Router();
 const identityService = new IdentityService();
 
 // Register user
-identityRouter.post('/register', validationMiddleware(RegisterUserRequest), async (req: Request, res: Response) => {
+identityRouter.post('/register', validationMiddleware(RegisterUserRequest, 'body'), async (req: Request, res: Response) => {
     let request = req.body as RegisterUserRequest;
     let result = await identityService.registerUser(request);
     return match(result, 
@@ -22,7 +22,7 @@ identityRouter.post('/register', validationMiddleware(RegisterUserRequest), asyn
 });
 
 // Login user
-identityRouter.post('/login', validationMiddleware(LoginUserRequest), async(req: Request, res: Response) => {
+identityRouter.post('/login', validationMiddleware(LoginUserRequest, 'body'), async(req: Request, res: Response) => {
     let request = req.body as LoginUserRequest;
     let response = await identityService.loginUser(request);
     return match(response, 
@@ -36,7 +36,7 @@ identityRouter.post('/login', validationMiddleware(LoginUserRequest), async(req:
 });
 
 // change user password
-identityRouter.post('/changepassword', authenticationMiddleware(), validationMiddleware(ChangePasswordRequest), async(req: Request, res: Response) => {
+identityRouter.post('/changepassword', authenticationMiddleware(), validationMiddleware(ChangePasswordRequest, 'body'), async(req: Request, res: Response) => {
     let request = req.body as ChangePasswordRequest;
     let response = await identityService.changePassword(request);
     return match(response, 

@@ -7,7 +7,7 @@ const userSchema = new Schema({
     lastname: { type: String, minlength: 1, maxlength: 25, required: true },
     email: { type: String, unique: true, required: true },
     password: { type: String, minlength: 6, maxlength: 125, required: true },
-    registered_on: { type: Date, default: new Date().getUTCDate() }
+    registered_on: { type: Date, default: new Date() }
 });
 
 const User: Model<IUser> = model('users', userSchema);
