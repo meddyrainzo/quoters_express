@@ -4,6 +4,7 @@ import chaiHttp from 'chai-http';
 import LoginUserRequest from '../../../../src/modules/identity/requests/login.user.request';
 import IdentityErrorReason from '../../../../src/modules/identity/identity.error.reason';
 import server from '../../../../src/server';
+import ErrorReasons from '../../../../src/Error/error.reasons';
 
 chai.use(chaiHttp);
 const url = '/identity/login';
@@ -37,7 +38,7 @@ describe('Test logging in a registered user', () => {
         expect(response.status).to.equal(400);
         expect(response.body).to.have.property('errorReason');
         expect(response.body.errorReason).to.contain(IdentityErrorReason.INVALID_EMAIL);
-        expect(response.body.errorReason).to.contain(`Password ${IdentityErrorReason.REQUIRED}`);
+        expect(response.body.errorReason).to.contain(`Password ${ErrorReasons.REQUIRED}`);
     })
 
     it('should log in a registered user successfully', async() => {

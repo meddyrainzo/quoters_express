@@ -24,6 +24,7 @@ before(done => {
     })
 })
 
+
 describe('Test changing password', () => {
     
     it('should fail if the user is not authenticated', done => {
@@ -50,8 +51,8 @@ describe('Test changing password', () => {
             .end((_, response) => {
                 expect(response.status).to.equal(400);
                 expect(response.body).to.have.property('errorReason');
-                expect(response.body.errorReason).to.contain(`Old password ${IdentityErrorReason.REQUIRED}`);
-                expect(response.body.errorReason).to.contain(`New password ${IdentityErrorReason.REQUIRED}`);
+                expect(response.body.errorReason).to.contain(`Old password ${ErrorReasons.REQUIRED}`);
+                expect(response.body.errorReason).to.contain(`New password ${ErrorReasons.REQUIRED}`);
                 done();
             });        
     });

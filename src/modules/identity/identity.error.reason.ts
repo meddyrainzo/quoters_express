@@ -6,9 +6,7 @@ enum IdentityErrorReason {
     LONG_FIRSTNAME = 'The first name is too long. It should contain at most 25 letters',
     SHORT_LASTNAME = 'Last name too short. It should contain at least one letter',
     LONG_LASTNAME = 'The last name is too long. It should contain at most 25 letters',
-    INVALID_STRING = 'should only contain characters',
     INVALID_LOGIN = 'Incorrect email or password',
-    REQUIRED = 'is required',
     INCORRECT_OLDPASSWORD = 'The old password is incorrect'
 }
 

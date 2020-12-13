@@ -2,9 +2,11 @@ import { Router, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { jwtConfig } from '../../../config';
 import Header from '../../../header';
+import authenticationMiddleware from '../../../middlewares/authentication.middleware';
 import validationMiddleware from '../../../middlewares/validation.middleware';
 import match from '../../../result';
 import QuoteQueryParameters from '../requests/quotes.query.parameters';
+import WriteQuoteRequest from '../requests/write.quote.request';
 import QuotesService from '../service/quotes.service';
 
 const quoteRouter = Router();
@@ -51,6 +53,16 @@ quoteRouter.get('/:id', async (req: Request, res: Response) => {
 });
 
 // Write quote
+quoteRouter.post('/', authenticationMiddleware(), validationMiddleware(WriteQuoteRequest, 'body'), async (req: Request, res: Response) => {
+    const userId = req.body['userId'];
+    const request = req.body as WriteQuoteRequest;
+    const response = await quotesService.writeQuote(request, userId);
+
+    return match(response, 
+        success => res.status(201).json(success),
+        failure => res.status(failure.status).json(failure)
+    );
+});
 
 // Change quote
 

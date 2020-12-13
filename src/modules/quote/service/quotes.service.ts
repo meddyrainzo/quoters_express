@@ -7,6 +7,7 @@ import IQuote from '../models/IQuote';
 import Quote from '../models/Quote';
 import QuoteErrorReason from '../quote.error.reason';
 import QuotesQueryParameters from '../requests/quotes.query.parameters';
+import WriteQuoteRequest from '../requests/write.quote.request';
 import QuotesResponse from '../response/quotes.response';
 import SingleQuoteResponse from '../response/single.quote.response';
 
@@ -15,10 +16,10 @@ export default class QuotesService {
 
     private mapQuoteToSingleQuoteResponse(quote: IQuote, userId?: string): SingleQuoteResponse {
         const id = quote._id.toString();
-        const likesCount = quote.likes.length;
-        const likedByYou = userId === null ? false : quote.likes.filter(like => like === userId).length > 0;
+        const likesCount = quote.likes!.length;
+        const likedByYou = userId === null ? false : quote.likes!.filter(like => like === userId).length > 0;
         return new SingleQuoteResponse(id, quote.quote, quote.author, quote.posted_by,
-             quote.posted_on.toDateString(), likesCount, likedByYou)
+             quote.posted_on!.toDateString(), likesCount, likedByYou)
     }
 
     async getQuotes(queryParameters: QuotesQueryParameters, userId?: string): Promise<Result<QuotesResponse>> {
@@ -51,6 +52,23 @@ export default class QuotesService {
             const message = 'Failed to get the single quote';
             logger.error(message, { error_message: err.message });
             return { tag: 'failure', error: new ErrorResponse(404, QuoteErrorReason.NOT_FOUND) };
+        }
+    }
+
+    async writeQuote(request: WriteQuoteRequest, userId: string): Promise<Result<SingleQuoteResponse>> {
+        try {
+            const { quote, author } = request;
+            const createdQuote = await Quote.create({
+                quote,
+                author,
+                posted_by: userId
+            });
+            const singleQuoteResponse = this.mapQuoteToSingleQuoteResponse(createdQuote, userId);
+            return { tag: 'success', result: singleQuoteResponse };
+        } catch(err) {
+            const message = 'Failed to get the write quote';
+            logger.error(message, { error_message: err.message });
+            return { tag: 'failure', error: new ErrorResponse(404, message) };
         }
     }
 }

@@ -4,6 +4,7 @@ import chaiHttp from 'chai-http';
 import server from '../../../../src/server';
 import RegisterUserRequest from '../../../../src/modules/identity/requests/register.user.request';
 import IdentityErrorReason from '../../../../src/modules/identity/identity.error.reason';
+import ErrorReasons from '../../../../src/Error/error.reasons';
 
 chai.use(chaiHttp);
 
@@ -21,8 +22,8 @@ describe('Testing user registration', () => {
         expect(response.body).to.have.property('errorReason');
         expect(response.body.errorReason).to.contain(IdentityErrorReason.SHORT_FIRSTNAME);
         expect(response.body.errorReason).to.contain(IdentityErrorReason.LONG_LASTNAME);
-        expect(response.body.errorReason).to.contain(`Email ${IdentityErrorReason.REQUIRED}`);
-        expect(response.body.errorReason).to.contain(`Password ${IdentityErrorReason.INVALID_STRING}`);
+        expect(response.body.errorReason).to.contain(`Email ${ErrorReasons.REQUIRED}`);
+        expect(response.body.errorReason).to.contain(`Password ${ErrorReasons.INVALID_STRING}`);
     })
 
     it('should register a user with a correct request successfully', async () => {
