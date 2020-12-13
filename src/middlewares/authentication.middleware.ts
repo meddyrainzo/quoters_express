@@ -21,8 +21,7 @@ const authenticationMiddleware = (): RequestHandler => {
                 logger.error('The token must have expired');
                 res.status(401).json({ error_message: ErrorReasons.UNAUTHORIZED });
             }
-        }
-        
+        }    
     };
 }
 

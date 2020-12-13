@@ -10,7 +10,7 @@ db.createUser(
 
 db.createCollection('users');
 
-const insert = db.users.save([
+db.users.save([
     {
         _id: ObjectId('5dae58764330512bdc80776a'),
         firstname: "Randy",
@@ -30,5 +30,26 @@ const insert = db.users.save([
         registered_on: new Date()
     }
 ]);
+
+db.createCollection('quotes');
+
+db.quotes.save([
+    {
+        _id: ObjectId('5dae58764330512bdc80776a'),
+        quote: 'Everything that has a beginning has an end',
+        author: 'Agent Smith',
+        posted_by: '5dae58764680512bdc80397f',
+        likes: ['5dae58764330512bdc80776a'],
+        posted_on: new Date()
+    },
+    {
+        _id: ObjectId('5dae58764680512bdc80397f'),
+        quote: 'With great power comes great responsibility',
+        author: 'Uncle Ben',
+        posted_by: '5dae58764330512bdc80776a',
+        likes: [],
+        posted_on: new Date()
+    }
+])
 
 print('##################### FINISHED #####################');

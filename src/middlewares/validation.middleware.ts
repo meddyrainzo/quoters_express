@@ -6,7 +6,6 @@ import ErrorResponse from "../Error/error.response";
 
 const validationMiddleware = (clazz: any, property: string): RequestHandler => {
     return async (req: Request, res: Response, next: NextFunction) => {
-        const a = req.body;
         const value = plainToClass(clazz, (<any>req)[property]);
         var validationErrors = await validate(value, { whitelist: true, forbidUnknownValues: true, dismissDefaultMessages: true });
 
