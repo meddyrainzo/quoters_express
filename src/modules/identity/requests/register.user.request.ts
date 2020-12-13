@@ -30,14 +30,15 @@ export default class RegisterUserRequest {
     } })
     email: string;
 
+    
+    @MinLength(1, { message: IdentityErrorReason.SHORT_PASSWORD })
+    @MaxLength(125, { message: IdentityErrorReason.LONG_PASSWORD })
     @IsString({ message: (args: ValidationArguments) => {
         if (!args.value) {
             return `Password ${IdentityErrorReason.REQUIRED}`;
         }
         return `Password ${IdentityErrorReason.INVALID_STRING}`;
     } })
-    @MinLength(1, { message: IdentityErrorReason.SHORT_PASSWORD })
-    @MaxLength(125, { message: IdentityErrorReason.LONG_PASSWORD })
     password: string;
 
     constructor(firstname: string, lastname: string, email: string, password: string) {

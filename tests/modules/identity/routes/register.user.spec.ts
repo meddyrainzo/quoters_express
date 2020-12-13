@@ -21,7 +21,7 @@ describe('Testing user registration', () => {
         expect(response.body).to.have.property('errorReason');
         expect(response.body.errorReason).to.contain(IdentityErrorReason.SHORT_FIRSTNAME);
         expect(response.body.errorReason).to.contain(IdentityErrorReason.LONG_LASTNAME);
-        expect(response.body.errorReason).to.contain(IdentityErrorReason.INVALID_EMAIL);
+        expect(response.body.errorReason).to.contain(`Email ${IdentityErrorReason.REQUIRED}`);
         expect(response.body.errorReason).to.contain(`Password ${IdentityErrorReason.INVALID_STRING}`);
     })
 
