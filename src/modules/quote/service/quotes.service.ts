@@ -1,11 +1,11 @@
-import { ObjectID } from 'mongodb';
-
 import { logger } from '../../../config';
+import ErrorReasons from '../../../Error/error.reasons';
 import ErrorResponse from '../../../Error/error.response';
 import { Result } from '../../../result';
 import IQuote from '../models/IQuote';
 import Quote from '../models/Quote';
 import QuoteErrorReason from '../quote.error.reason';
+import ChangeQuoteRequest from '../requests/change.quote.request';
 import QuotesQueryParameters from '../requests/quotes.query.parameters';
 import WriteQuoteRequest from '../requests/write.quote.request';
 import QuotesResponse from '../response/quotes.response';
@@ -66,9 +66,61 @@ export default class QuotesService {
             const singleQuoteResponse = this.mapQuoteToSingleQuoteResponse(createdQuote, userId);
             return { tag: 'success', result: singleQuoteResponse };
         } catch(err) {
-            const message = 'Failed to get the write quote';
+            const message = 'Failed to write quote';
+            logger.error(message, { error_message: err.message });
+            return { tag: 'failure', error: new ErrorResponse(400, message) };
+        }
+    }
+
+    async changeQuote(request: ChangeQuoteRequest, quoteId: string, userId: string): Promise<Result<SingleQuoteResponse>> {
+        try {
+            const { quote, author } = request;
+            const quoteToUpdate = await Quote.findById(quoteId);
+           
+            if(!quoteToUpdate) {
+                logger.error(`No quote found with the given id ${quoteId}`);
+                return { tag: 'failure', error: new ErrorResponse(404, QuoteErrorReason.NOT_FOUND) };
+            }
+
+            if (quoteToUpdate.posted_by !== userId) {
+                logger.error("Wrong user trying to update a quote");
+                return { tag: 'failure', error: new ErrorResponse(403, ErrorReasons.FORBIDDEN) };
+            }
+
+            const updatedQuote = await Quote.findOneAndUpdate({ _id: quoteToUpdate.id }, {
+                quote,
+                author,
+                posted_by: userId
+            }, { new: true });
+            const singleQuoteResponse = this.mapQuoteToSingleQuoteResponse(updatedQuote!, userId);
+            return { tag: 'success', result: singleQuoteResponse };
+        } catch(err) {
+            const message = 'Failed to write the quote';
+            logger.error(message, { error_message: err.message });
+            return { tag: 'failure', error: new ErrorResponse(400, message) };
+        }
+    }
+
+    async deleteQuote(quoteId: string, userId: string): Promise<Result<string>> {
+        try {
+            const quote = await Quote.findById(quoteId);
+            if(!quote) {
+                logger.error(`No quote found with the given id ${quoteId}`);
+                return { tag: 'failure', error: new ErrorResponse(404, QuoteErrorReason.NOT_FOUND) };
+            }
+
+            if (quote.posted_by !== userId) {
+                logger.error("Wrong user trying to update a quote");
+                return { tag: 'failure', error: new ErrorResponse(403, ErrorReasons.FORBIDDEN) };
+            }
+            await Quote.deleteOne({ _id: quoteId });
+            logger.info('Deleted the quote successfully');
+            return { tag: 'success', result: '' };
+        } catch (err) {
+            const message = 'Failed to delete the quote';
             logger.error(message, { error_message: err.message });
             return { tag: 'failure', error: new ErrorResponse(404, message) };
         }
+
     }
 }

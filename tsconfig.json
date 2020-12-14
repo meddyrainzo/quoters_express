@@ -69,9 +69,8 @@
   },
   "include": [
     "./src/**/*.ts"
-, "src/init.db.js"  ],
+,   "src/init.db.js"  ],
   "exclude": [
-    "./tests/",
     "./node_modules"
   ]
 }

@@ -11,9 +11,9 @@ const server = express();
 server.use(helmet());
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
+const { port } = serverConfig;
 
 (async () => {
-    const { port } = serverConfig;
     const { db_host, db_name, db_user, db_password } = dbConfig;
     logger.info('Attempting to connect');
     try {

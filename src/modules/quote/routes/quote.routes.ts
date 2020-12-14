@@ -5,6 +5,7 @@ import Header from '../../../header';
 import authenticationMiddleware from '../../../middlewares/authentication.middleware';
 import validationMiddleware from '../../../middlewares/validation.middleware';
 import match from '../../../result';
+import ChangeQuoteRequest from '../requests/change.quote.request';
 import QuoteQueryParameters from '../requests/quotes.query.parameters';
 import WriteQuoteRequest from '../requests/write.quote.request';
 import QuotesService from '../service/quotes.service';
@@ -65,7 +66,28 @@ quoteRouter.post('/', authenticationMiddleware(), validationMiddleware(WriteQuot
 });
 
 // Change quote
+quoteRouter.put('/:id', authenticationMiddleware(), validationMiddleware(ChangeQuoteRequest, 'body'), async(req: Request, res: Response) => {
+    const quoteId = req.params.id;
+    const userId = req.body['userId'];
+    const request = req.body as ChangeQuoteRequest;
+    const response = await quotesService.changeQuote(request, quoteId, userId);
+
+    return match(response, 
+        success => res.status(200).json(success),
+        failure => res.status(failure.status).json(failure)
+    );
+})
 
 // Delete quote
+quoteRouter.delete('/:id', authenticationMiddleware(), async(req:Request, res: Response) => {
+    const quoteId = req.params.id;
+    const userId = req.body['userId'];
+    const response = await quotesService.deleteQuote(quoteId, userId);
+
+    return match(response, 
+        _ => res.status(204).json({}),
+        failure => res.status(failure.status).json(failure)
+    );
+})
 
 export default quoteRouter;
