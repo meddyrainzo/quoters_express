@@ -101,6 +101,40 @@ export default class QuotesService {
         }
     }
 
+    async reactToQuote(quoteId: string, userId: string): Promise<Result<string>> {
+        try {
+            const quote = await Quote.findById(quoteId);
+            if(!quote) {
+                logger.error(`No quote found with the given id ${quoteId}`);
+                return { tag: 'failure', error: new ErrorResponse(404, QuoteErrorReason.NOT_FOUND) };
+            }
+            let likes: string[];
+            // Any likes yet?
+            if (quote.likes) {
+                // Check if the user has already liked the quote. If yes, then remove the like
+                const found = quote.likes.find(l => l === userId);
+                if (found) {
+                    likes = quote.likes.filter(l => l !== userId);
+                } else {
+                    quote.likes.push(userId);
+                    likes = quote.likes;
+                }
+            } else {
+                likes = [userId];
+            }
+            const update = { likes: likes };
+            await Quote.updateOne({ _id: quote.id }, {
+                update
+            });
+            logger.info('Successfully reacted to the quote');
+            return { tag: 'success', result: '' };
+        } catch (err) {
+            const message = 'Failed to delete the quote';
+            logger.error(message, { error_message: err.message });
+            return { tag: 'failure', error: new ErrorResponse(400, message) };
+        }
+    }
+
     async deleteQuote(quoteId: string, userId: string): Promise<Result<string>> {
         try {
             const quote = await Quote.findById(quoteId);

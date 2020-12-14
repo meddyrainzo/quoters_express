@@ -78,6 +78,19 @@ quoteRouter.put('/:id', authenticationMiddleware(), validationMiddleware(ChangeQ
     );
 })
 
+// Like/Dislike a quote
+quoteRouter.put('/:id/react', authenticationMiddleware(), async(req: Request, res: Response) => {
+    const quoteId = req.params.id;
+    const userId = req.body['userId'];
+
+    const response = await quotesService.reactToQuote(quoteId, userId);
+
+    return match(response,
+        _ => res.status(204).json({}),
+        failure => res.status(failure.status).json(failure)
+    );
+});
+
 // Delete quote
 quoteRouter.delete('/:id', authenticationMiddleware(), async(req:Request, res: Response) => {
     const quoteId = req.params.id;
