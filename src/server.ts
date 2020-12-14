@@ -3,6 +3,7 @@ import helmet from 'helmet';
 import mongoose from 'mongoose';
 
 import { serverConfig, logger, dbConfig } from './config';
+import commentRouter from './modules/comments/routes/comments.routes';
 import identityRouter from './modules/identity/routes/identity.routes';
 import quoteRouter from './modules/quote/routes/quote.routes';
 
@@ -29,6 +30,7 @@ const { port } = serverConfig;
 
 server.use('/identity', identityRouter);
 server.use('/quotes', quoteRouter);
+server.use('/comments', commentRouter);
 
 
 export default server;

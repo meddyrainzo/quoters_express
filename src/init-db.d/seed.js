@@ -50,6 +50,7 @@ db.quotes.save([
         author: 'Agent Smith',
         posted_by: '5dae58764680512bdc80397f',
         likes: ['5dae58764330512bdc80776a'],
+        comments: 0,
         posted_on: new Date()
     },
     {
@@ -58,6 +59,7 @@ db.quotes.save([
         author: 'Uncle Ben',
         posted_by: '5dae58764330512bdc80776a',
         likes: [],
+        comments: 0,
         posted_on: new Date()
     },
     {
@@ -66,6 +68,7 @@ db.quotes.save([
         author: 'Hot fuzz',
         posted_by: '5dae58764680512bdc80397f',
         likes: [],
+        comments: 0,
         posted_on: new Date()
     }
 ])

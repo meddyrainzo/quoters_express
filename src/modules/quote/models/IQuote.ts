@@ -6,5 +6,5 @@ export default interface IQuote extends Document {
     posted_by: string; // id of the user that posted the quote
     likes?: string[];
     posted_on?: Date;
-    // TODO: Comment count
+    comments?: number;
 }
