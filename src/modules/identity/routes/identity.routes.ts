@@ -12,37 +12,54 @@ const identityRouter = Router();
 const identityService = new IdentityService();
 
 // Register user
-identityRouter.post('/register', validationMiddleware(RegisterUserRequest, 'body'), async (req: Request, res: Response) => {
+identityRouter.post(
+  '/register',
+  validationMiddleware(RegisterUserRequest, 'body'),
+  async (req: Request, res: Response) => {
     let request = req.body as RegisterUserRequest;
     let result = await identityService.registerUser(request);
-    return match(result, 
-        response => res.status(201).json(response),
-        error => res.status(error.status).json(error) 
+    return match(
+      result,
+      (response) => res.status(201).json(response),
+      (error) => res.status(error.status).json(error)
     );
-});
+  }
+);
 
 // Login user
-identityRouter.post('/login', validationMiddleware(LoginUserRequest, 'body'), async(req: Request, res: Response) => {
+identityRouter.post(
+  '/login',
+  validationMiddleware(LoginUserRequest, 'body'),
+  async (req: Request, res: Response) => {
     let request = req.body as LoginUserRequest;
     let response = await identityService.loginUser(request);
-    return match(response, 
-        success => {
-            const { token, ...exceptToken } = success;
-            res.set(Header.AUTH_TOKEN, success.token);
-            res.status(200).json({ ...exceptToken });
-        },
-        error => res.status(error.status).json(error)
+    return match(
+      response,
+      (success) => {
+        res.set(Header.AUTH_TOKEN, success.token);
+        res.status(200).json(success);
+      },
+      (error) => {
+        res.status(error.status).json(error);
+      }
     );
-});
+  }
+);
 
 // change user password
-identityRouter.post('/changepassword', authenticationMiddleware(), validationMiddleware(ChangePasswordRequest, 'body'), async(req: Request, res: Response) => {
+identityRouter.post(
+  '/changepassword',
+  authenticationMiddleware(),
+  validationMiddleware(ChangePasswordRequest, 'body'),
+  async (req: Request, res: Response) => {
     let request = req.body as ChangePasswordRequest;
     let response = await identityService.changePassword(request);
-    return match(response, 
-        _ => res.status(204).json({}),
-        error => res.status(error.status).json(error)    
+    return match(
+      response,
+      (_) => res.status(204).json({}),
+      (error) => res.status(error.status).json(error)
     );
-})
+  }
+);
 
 export default identityRouter;
