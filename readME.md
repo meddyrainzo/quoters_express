@@ -17,3 +17,6 @@ This is the `nodejs` version of the quoters application written with `expressjs`
 - `jsonwebtoken`
 
 **NOTE** The `env` file should not be in the git repository.
+
+## Steps to run
+To run, first of all go into the `src` folder and run `docker-compose up`. This starts up the database. Then go back to the root folder and run `npm start`. Swagger documentation not added yet 
