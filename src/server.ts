@@ -25,6 +25,7 @@ const { port } = serverConfig;
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
+      useFindAndModify: false,
     });
     server.listen(port, () =>
       logger.info(`Server running on port:: ${port}...`)
