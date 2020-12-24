@@ -27,7 +27,7 @@ export default class QuotesService {
     quote: IQuote,
     userId: string
   ): Promise<SingleQuoteResponse> {
-    const poster = await User.findOne({ _id: quote.id });
+    const poster = await User.findOne({ _id: userId });
     const postedBy = new PostedBy(poster!.firstname, poster!.lastname);
     return this.mapQuoteToSingleQuoteResponse(quote, postedBy, userId);
   }
@@ -62,7 +62,10 @@ export default class QuotesService {
     try {
       const { currentPage, resultsPerPage } = queryParameters;
       const skip = currentPage * resultsPerPage;
-      const quotes = await Quote.find().skip(skip).limit(resultsPerPage);
+      const quotes = await Quote.find()
+        .sort({ _id: -1 })
+        .skip(skip)
+        .limit(resultsPerPage);
       let quoteResponse = [];
       if (quotes.length > 0) {
         for (let q of quotes) {
@@ -113,6 +116,7 @@ export default class QuotesService {
   ): Promise<Result<SingleQuoteResponse>> {
     try {
       const { quote, author } = request;
+      logger.info(`The writers id is ${userId}`);
       const createdQuote = await Quote.create({
         quote,
         author,
